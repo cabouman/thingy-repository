@@ -137,7 +137,7 @@
   <section class="submit">
     <h2>🚀 Submit your thingy</h2>
     <ol>
-      <li>Make a free account at <a href="https://huggingface.co/join">huggingface.co</a>.</li>
+      <li>Make a free account at <a href="https://huggingface.co/join" target="_blank" rel="noopener">huggingface.co</a>.</li>
       <li>Create a <b>Space</b> (New &rarr; Space), choose the <b>Static</b> SDK and the Blank template, and set it to Public.</li>
       <li>Pick an <b>open-source license</b> for your Space &mdash; any OSI-approved license you like (Charlie uses BSD 3-Clause).</li>
       <li>Upload your thingy as <code>index.html</code> (plus any files it needs). It must run entirely in the browser.</li>
@@ -155,7 +155,7 @@
 
   <footer>
     Popularity order: most-liked first, refreshed on every visit.
-    The list lives in <a href="https://huggingface.co/collections/cabouman/the-thingy-repository">this Hugging Face collection</a>.
+    The list lives in <a href="https://huggingface.co/collections/cabouman/the-thingy-repository" target="_blank" rel="noopener">this Hugging Face collection</a>.
   </footer>
 </div>
 
@@ -196,6 +196,8 @@ async function load() {
     const a = document.createElement("a");
     a.className = "tile" + (i === 0 && item.likes > 0 ? " rank1" : "");
     a.href = "https://huggingface.co/spaces/" + item.id;
+    a.target = "_blank";
+    a.rel = "noopener";
 
     const art = document.createElement("div");
     art.className = "art";
