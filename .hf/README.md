@@ -21,3 +21,5 @@ there redeploys this Space via a GitHub Action.
 Submissions: email the link to your Space to Charles.Bouman@gmail.com
 with the subject "Thingy submission: [name]". See the page itself for
 the full instructions.
+
+Maintained by Charlie Bouman (cabouman).
