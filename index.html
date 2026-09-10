@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Thingy Repository</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #fdf6e3;
+    --bg2: #ffe9b3;
+    --ink: #2d2a26;
+    --accent: #c28e0e;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Fredoka", "Avenir Next", "Trebuchet MS", sans-serif;
+    color: var(--ink);
+    background: linear-gradient(160deg, var(--bg1), var(--bg2));
+    min-height: 100vh;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 2.2rem 1.2rem 4rem; }
+
+  header { text-align: center; margin-bottom: 1.8rem; }
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+    letter-spacing: 0.01em;
+  }
+  h1 .bounce { display: inline-block; transition: transform 0.2s; }
+  h1:hover .bounce { transform: translateY(-8px) rotate(-8deg); }
+  .tagline { font-size: 1.15rem; margin: 0; opacity: 0.85; }
+  .tagline b { color: var(--accent); }
+
+  #status { text-align: center; padding: 2rem; font-size: 1.1rem; opacity: 0.7; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.1rem;
+    margin-top: 1.2rem;
+  }
+  .tile {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 0.8rem 0.8rem 0.9rem;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: 0 3px 0 rgba(45,42,38,0.12);
+    border: 2px solid rgba(45,42,38,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tile:hover {
+    transform: translateY(-5px) rotate(-1deg);
+    box-shadow: 0 9px 18px rgba(45,42,38,0.18);
+  }
+  .tile .art {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.2rem;
+  }
+  .tile .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile .name {
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .tile .meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+  .likes { white-space: nowrap; }
+  .rank1 .art { outline: 3px solid #f5b301; outline-offset: 2px; }
+
+  section.submit {
+    margin-top: 3rem;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 1.6rem 1.8rem;
+    border: 2px solid rgba(45,42,38,0.08);
+    box-shadow: 0 3px 0 rgba(45,42,38,0.12);
+  }
+  section.submit h2 { margin: 0 0 0.7rem; font-size: 1.5rem; }
+  section.submit ol { margin: 0.4rem 0 1rem 1.2rem; padding: 0; line-height: 1.65; }
+  section.submit li { margin-bottom: 0.35rem; }
+  section.submit code {
+    background: #f4efe2;
+    border-radius: 6px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.92em;
+  }
+  .mailbtn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    transition: transform 0.15s ease;
+  }
+  .mailbtn:hover { transform: scale(1.05); }
+  .fineprint { font-size: 0.88rem; opacity: 0.7; margin-top: 0.9rem; }
+
+  footer { text-align: center; margin-top: 2.5rem; font-size: 0.85rem; opacity: 0.6; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="bounce">🎪</span> The Thingy Repository</h1>
+    <p class="tagline">Little apps built by <b>Friends of Charlie (FoC)</b>.
+       Click a thingy to try it &mdash; and <b>&hearts; like</b> the ones you enjoy!</p>
+  </header>
+
+  <div id="status">Loading thingys&hellip;</div>
+  <div class="grid" id="grid"></div>
+
+  <section class="submit">
+    <h2>🚀 Submit your thingy</h2>
+    <ol>
+      <li>Make a free account at <a href="https://huggingface.co/join">huggingface.co</a>.</li>
+      <li>Create a <b>Space</b> (New &rarr; Space), choose the <b>Static</b> SDK and the Blank template, and set it to Public.</li>
+      <li>Pick an <b>open-source license</b> for your Space &mdash; any OSI-approved license you like (Charlie uses BSD 3-Clause).</li>
+      <li>Upload your thingy as <code>index.html</code> (plus any files it needs). It must run entirely in the browser.</li>
+      <li>Add a square <code>icon.png</code> (about 400&times;400) to your Space &mdash; that image becomes your tile here.</li>
+      <li>Give your Space a short description &mdash; it shows under your tile.</li>
+      <li>Test your Space by opening it, then email the link to Charlie using the button below.</li>
+    </ol>
+    <a class="mailbtn" href="mailto:Charles.Bouman@gmail.com?subject=Thingy%20submission%3A%20%5Byour%20thingy%20name%5D&body=Hi%20Charlie%2C%0A%0AHere%20is%20my%20thingy%3A%20https%3A%2F%2Fhuggingface.co%2Fspaces%2FYOUR-USERNAME%2FYOUR-SPACE%0A%0AName%3A%0AWhat%20it%20does%3A%0A%0A">
+      &#9993; Email your submission
+    </a>
+    <p class="fineprint">Submissions are reviewed before they appear. A thingy is accepted when it runs,
+       is appropriate for a public site, is open source, and has its icon and description.
+       Approved thingys show up on this page automatically.</p>
+  </section>
+
+  <footer>
+    Popularity order: most-liked first, refreshed on every visit.
+    The list lives in <a href="https://huggingface.co/collections/cabouman/the-thingy-repository">this Hugging Face collection</a>.
+  </footer>
+</div>
+
+<script>
+const COLLECTION_API = "https://huggingface.co/api/collections/cabouman/the-thingy-repository";
+// Hugging Face gradient color names -> hex, used when a thingy has no icon.png
+const HF_COLORS = {
+  red:"#f87171", yellow:"#facc15", green:"#4ade80", blue:"#60a5fa",
+  indigo:"#818cf8", purple:"#c084fc", pink:"#f472b6", gray:"#9ca3af"
+};
+
+function emojiTile(item) {
+  const from = HF_COLORS[item.colorFrom] || "#ddd";
+  const to = HF_COLORS[item.colorTo] || "#bbb";
+  const div = document.createElement("div");
+  div.className = "art";
+  div.style.background = `linear-gradient(135deg, ${from}, ${to})`;
+  div.textContent = item.emoji || "✨";
+  return div;
+}
+
+async function load() {
+  const status = document.getElementById("status");
+  const grid = document.getElementById("grid");
+  let data;
+  try {
+    const r = await fetch(COLLECTION_API);
+    data = await r.json();
+  } catch (e) {
+    status.textContent = "Could not load the thingy list. Please refresh.";
+    return;
+  }
+  const items = (data.items || []).filter(x => x.repoType === "space" && !x.private);
+  items.sort((a, b) => (b.likes - a.likes) || (new Date(a.createdAt) - new Date(b.createdAt)));
+  status.remove();
+
+  items.forEach((item, i) => {
+    const a = document.createElement("a");
+    a.className = "tile" + (i === 0 && item.likes > 0 ? " rank1" : "");
+    a.href = "https://huggingface.co/spaces/" + item.id;
+
+    const art = document.createElement("div");
+    art.className = "art";
+    const img = document.createElement("img");
+    img.alt = item.title || item.id;
+    img.src = "https://huggingface.co/spaces/" + item.id + "/resolve/main/icon.png";
+    img.onerror = () => art.replaceWith(emojiTile(item));
+    art.appendChild(img);
+
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = item.title || item.id.split("/")[1];
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.innerHTML = `<span>by ${item.author}</span><span class="likes">&hearts; ${item.likes}</span>`;
+
+    a.append(art, name, meta);
+    grid.appendChild(a);
+  });
+
+  if (!items.length) {
+    grid.insertAdjacentHTML("beforebegin",
+      '<div id="status">No thingys yet &mdash; yours could be first!</div>');
+  }
+}
+load();
+</script>
+</body>
+</html>
