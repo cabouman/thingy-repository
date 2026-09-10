@@ -23,12 +23,19 @@ public Space on the person's own free Hugging Face account.
 
 - **JavaScript or HTML:** create a static Space (SDK `static`,
   Blank template) with the app as `index.html`.
-- **Python:** use Gradio-Lite inside a static Space. The Python
-  runs in the visitor's browser. numpy, scipy, matplotlib, and
-  pure-Python packages work; there is no GPU, and startup takes a
-  few seconds. Only if the thingy genuinely needs a server does it
-  require a paid Hugging Face plan - tell the person before going
-  that route.
+- **Python:** two routes.
+  - **Free:** Gradio-Lite inside a static Space, pinned to its last
+    release (5.45.0) - load it from
+    `https://cdn.jsdelivr.net/npm/@gradio/lite@5.45.0/dist/lite.js`.
+    The Python runs in the visitor's browser; numpy, scipy,
+    matplotlib, and pure-Python packages work; there is no GPU, and
+    startup takes a few seconds. Gradio-Lite is no longer
+    maintained, so pin that version and do not expect Gradio 6
+    features.
+  - **Paid:** a standard Gradio Space (SDK `gradio`), which runs
+    current Gradio on a server. It requires a paid Hugging Face
+    plan - tell the person before going this route. Prefer it when
+    the person has one.
 
 ## Submitting
 
