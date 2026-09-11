@@ -1,4 +1,4 @@
-name: Deploy to Hugging Face Space
+name: Deploy to Hugging Face Spaces
 
 on:
   push:
@@ -10,20 +10,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update the Space
+
+      - name: Build the Lite template page
+        run: python3 templates/lite/build.py
+
+      - name: Push each Space its files
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git clone "https://cabouman:$HF_TOKEN@huggingface.co/spaces/cabouman/thingy-repository" space
-          cp .hf/README.md space/README.md
-          cp index.html preview.png claude-instructions.md python-thingy-guide.md space/
-          cd space
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to deploy."
-          else
-            git commit -m "Deploy from GitHub commit $GITHUB_SHA"
-            git push
-          fi
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@users.noreply.github.com"
+
+          # update_space <space> <src:dest>... - clone the Space, lay the
+          # named files on top, commit onto its history (never force-push).
+          update_space () {
+            space="$1"; shift
+            dir=$(mktemp -d)
+            git clone --quiet "https://cabouman:$HF_TOKEN@huggingface.co/spaces/$space" "$dir"
+            for pair in "$@"; do cp "${pair%%:*}" "$dir/${pair##*:}"; done
+            git -C "$dir" add -A
+            if git -C "$dir" diff --cached --quiet; then
+              echo "$space: no changes."
+            else
+              git -C "$dir" commit --quiet -m "Deploy from GitHub commit $GITHUB_SHA"
+              git -C "$dir" push --quiet
+            fi
+          }
+
+          update_space cabouman/thingy-repository \
+            .hf/README.md:README.md \
+            index.html:index.html \
+            preview.png:preview.png \
+            claude-instructions.md:claude-instructions.md \
+            python-thingy-guide.md:python-thingy-guide.md
+
+          update_space cabouman/thingy-template-lite \
+            templates/lite/README.md:README.md \
+            templates/lite/index.html:index.html \
+            templates/lite/build.py:build.py \
+            templates/app.py:app.py \
+            templates/icon.png:icon.png
+
+          update_space cabouman/thingy-template \
+            templates/server/README.md:README.md \
+            templates/server/requirements.txt:requirements.txt \
+            templates/app.py:app.py \
+            templates/icon.png:icon.png

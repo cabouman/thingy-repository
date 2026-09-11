@@ -228,6 +228,14 @@ async function load() {
     return;
   }
   const items = (data.items || []).filter(x => x.repoType === "space" && !x.private);
+  // A hosted thingy lives under cabouman's account but belongs to its
+  // author; the Space's thingy_author metadata names them for the tile.
+  await Promise.all(items.filter(x => x.author === "cabouman").map(async item => {
+    try {
+      const d = await (await fetch("https://huggingface.co/api/spaces/" + item.id)).json();
+      if (d.cardData && d.cardData.thingy_author) item.author = d.cardData.thingy_author;
+    } catch (e) {}
+  }));
   items.sort((a, b) => (b.likes - a.likes) || (new Date(a.createdAt) - new Date(b.createdAt)));
   status.remove();
 

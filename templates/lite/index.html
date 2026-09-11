@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Wiggler</title>
+    <script>
+  // Gradio-Lite 5.45.0 is the last release of the Lite runtime.  This
+  // script patches the runtime's worker as it loads, in two places.  The
+  // runtime resolves gradio's dependencies from PyPI at whatever versions
+  // are current when the page loads, and three of them had moved on by
+  // 2026-09-10, each stopping the page before the app started; the first
+  // patch holds gradio's dependencies at the releases that were current
+  // when the runtime was published, at the versions written into the
+  // patch below.  gradio's queue
+  // keeps a thread runner that Pyodide cannot run, so one error in an
+  // event handler stopped the queue for good; the second patch gives the
+  // queue the runtime's own thread-free runner.  Nothing else changes.
+  (function () {
+    var patches = [["await i.add_mock_package(\"ffmpy\",\"0.3.0\"),await E(s,i,r)", "await i.add_mock_package(\"ffmpy\",\"0.3.0\"),await s.runPythonAsync(\"# Hold gradio's PyPI dependencies at the releases that were current when\\n# Gradio-Lite 5.45.0 was published, on 2025-09-10.  The resolver keeps its\\n# own logic; only the version each name may take is narrowed.\\nimport micropip.transaction as _transaction\\nfrom packaging.specifiers import SpecifierSet as _SpecifierSet\\n_PINS = {\\n    \\\"aiofiles\\\": \\\"==24.1.0\\\",\\n    \\\"annotated-doc\\\": \\\"==0.0.1\\\",\\n    \\\"anyio\\\": \\\"==4.10.0\\\",\\n    \\\"fastapi\\\": \\\"==0.116.1\\\",\\n    \\\"filelock\\\": \\\"==3.19.1\\\",\\n    \\\"groovy\\\": \\\"==0.1.2\\\",\\n    \\\"huggingface-hub\\\": \\\"==0.34.4\\\",\\n    \\\"pydub\\\": \\\"==0.25.1\\\",\\n    \\\"python-multipart\\\": \\\"==0.0.20\\\",\\n    \\\"safehttpx\\\": \\\"==0.1.6\\\",\\n    \\\"semantic-version\\\": \\\"==2.10.0\\\",\\n    \\\"starlette\\\": \\\"==0.47.3\\\",\\n    \\\"tomlkit\\\": \\\"==0.13.3\\\",\\n    \\\"typing-inspection\\\": \\\"==0.4.1\\\",\\n    \\\"websockets\\\": \\\"==15.0.1\\\"\\n}\\n_find_wheel = _transaction.find_wheel\\ndef _pinned_find_wheel(metadata, req):\\n    pin = _PINS.get(req.name)\\n    if pin:\\n        req.specifier &= _SpecifierSet(pin)\\n    return _find_wheel(metadata, req)\\n_transaction.find_wheel = _pinned_find_wheel\\n\"),await E(s,i,r)"], ["anyio.to_thread.run_sync = mocked_anyio_to_thread_run_sync", "anyio.to_thread.run_sync = mocked_anyio_to_thread_run_sync\nimport gradio.queueing\ngradio.queueing.run_sync = mocked_anyio_to_thread_run_sync"]];
+    var OriginalWorker = window.Worker;
+    function bootstrapSource(stubUrl) {
+      // This text runs inside the worker.  The runtime loads its worker
+      // through a one-line script that imports the real worker from the
+      // CDN, and this bootstrap reads that line, fetches the worker's
+      // code, patches it, and runs it.  The requests are synchronous so
+      // that the runtime's message handler is installed before its first
+      // message arrives.
+      return [
+        '(function () {',
+        '  function text(url) { var request = new XMLHttpRequest(); request.open("GET", url, false); request.send(); return request.responseText; }',
+        '  var stub = text(' + JSON.stringify(stubUrl) + ');',
+        '  var match = stub.match(/importScripts\\("([^"]+)"\\)/);',
+        '  if (!match) { console.warn("Lite runtime shim: the worker stub was not recognized, so the worker runs unpatched"); importScripts(' + JSON.stringify(stubUrl) + '); return; }',
+        '  var code = text(match[1]);',
+        '  var patches = ' + JSON.stringify(patches) + ';',
+        '  patches.forEach(function (pair) {',
+        '    var pieces = code.split(pair[0]);',
+        '    if (pieces.length === 2) { code = pieces.join(pair[1]); }',
+        '    else { console.warn("Lite runtime shim: an anchor was not found, so the worker runs without that patch: " + pair[0]); }',
+        '  });',
+        '  console.debug("Lite runtime shim: the worker holds 15 PyPI packages at their releases of 2025-09-10 and the queue has a thread-free runner");',
+        '  importScripts(URL.createObjectURL(new Blob([code], { type: "text/javascript" })));',
+        '})();'
+      ].join('\n');
+    }
+    window.Worker = class extends OriginalWorker {
+      constructor(url, options) {
+        if (String(url).indexOf('blob:') === 0) {
+          var blob = new Blob([bootstrapSource(String(url))], { type: 'text/javascript' });
+          super(URL.createObjectURL(blob), options);
+        } else {
+          super(url, options);
+        }
+      }
+    };
+  })();
+</script>
+    <script type="module" crossorigin src="https://cdn.jsdelivr.net/npm/@gradio/lite@5.45.0/dist/lite.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gradio/lite@5.45.0/dist/lite.css" />
+  </head>
+  <body>
+    <gradio-lite>
+<gradio-requirements>matplotlib</gradio-requirements>
+<gradio-file name="app.py" entrypoint>
+# The sample thingy. Replace this file with your own Gradio app.
+#
+# The same file runs in two places: in the browser (Gradio-Lite, the
+# free route) and on a Hugging Face server (the hosted route). Keep it
+# working in both by following python-thingy-guide.md: Gradio 5.45
+# features only, no threads, no sockets, no exception may escape an
+# event handler, and matplotlib uses the Agg backend with PNG plots.
+
+import sys
+
+import matplotlib
+matplotlib.use("Agg")  # must precede any pyplot import
+import matplotlib.pyplot as plt
+import numpy as np
+import gradio as gr
+
+TITLE = "The Wiggler"
+AUTHOR = "Your Name Here"
+
+
+def draw(freq, damping):
+    t = np.linspace(0, 10, 1000)
+    y = np.exp(-damping * t) * np.sin(2 * np.pi * freq * t)
+    fig, ax = plt.subplots(figsize=(7, 3.5))
+    ax.plot(t, y, color="#c28e0e", linewidth=2)
+    ax.set_ylim(-1.05, 1.05)
+    ax.set_xlabel("time (s)")
+    ax.set_title(f"A damped oscillation: freq {freq:.1f} Hz, damping {damping:.2f}")
+    fig.tight_layout()
+    plt.close(fig)
+    return fig
+
+
+with gr.Blocks(title=TITLE) as demo:
+    gr.Markdown(f"# {TITLE}\nBy **{AUTHOR}**")
+    with gr.Row():
+        freq = gr.Slider(0.1, 3.0, value=1.0, step=0.1, label="Frequency (Hz)")
+        damping = gr.Slider(0.0, 1.0, value=0.2, step=0.05, label="Damping")
+    plot = gr.Plot(format="png")
+    freq.change(draw, [freq, damping], plot)
+    damping.change(draw, [freq, damping], plot)
+    demo.load(draw, [freq, damping], plot)
+
+
+def running_in_pyodide():
+    return sys.platform == "emscripten" or "pyodide" in sys.modules
+
+
+if __name__ == "__main__" or running_in_pyodide():
+    demo.launch()
+
+</gradio-file>
+</gradio-lite>
+  </body>
+</html>

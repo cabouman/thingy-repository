@@ -23,19 +23,33 @@ public Space on the person's own free Hugging Face account.
 
 - **JavaScript or HTML:** create a static Space (SDK `static`,
   Blank template) with the app as `index.html`.
-- **Python:** two routes.
-  - **Free:** Gradio-Lite inside a static Space. Before writing any
-    code, read the Python guide at
-    https://cabouman-thingy-repository.static.hf.space/python-thingy-guide.md
-    and follow it exactly - it gives the pinned runtime version, a
-    required shim that keeps the page working, the app-writing
-    rules, and the list of usable packages. The Python runs in the
-    visitor's browser; there is no GPU, and startup takes ten to
-    fifteen seconds.
-  - **Paid:** a standard Gradio Space (SDK `gradio`), which runs
-    current Gradio on a server. It requires a paid Hugging Face
-    plan - tell the person before going this route. Prefer it when
-    the person has one.
+- **Python:** duplicate the Lite template at
+  https://huggingface.co/spaces/cabouman/thingy-template-lite
+  ("..." menu, "Duplicate this Space"). It is a working Gradio app
+  running in the visitor's browser, with the pinned runtime and its
+  shim already in place; replace the sample app and the icon. The
+  readable app is `app.py`, and `build.py` shows how it is embedded
+  in `index.html`. Before writing code, read the Python guide at
+  https://cabouman-thingy-repository.static.hf.space/python-thingy-guide.md
+  and follow its app rules (Gradio 5.45 features only, no threads,
+  no escaping exceptions, matplotlib on Agg with PNG plots).
+  Startup takes ten to fifteen seconds; there is no GPU.
+
+## Hosted thingys
+
+A thingy that outgrows the browser - too slow, needing packages
+Pyodide lacks, needing a real server - can be hosted under Charlie's
+paid account. The person emails Charlie as usual and says the thingy
+needs hosting. Charlie's assistant then duplicates it into `cabouman/`
+following the server template at
+https://huggingface.co/spaces/cabouman/thingy-template (ordinary
+Gradio, pinned to 5.45.0 so the app behaves exactly as it did on the
+Lite template), verifies that it runs, makes simple fixes if needed,
+and credits the true author in two places: the `thingy_author:` field
+in the Space README metadata, which the repository's front page shows
+as the tile's "by" name, and the `AUTHOR` line at the top of `app.py`,
+which the app displays as its opening line. Always develop and debug
+on the Lite template first.
 
 ## Submitting
 
