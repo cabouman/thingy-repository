@@ -37,19 +37,9 @@ public Space on the person's own free Hugging Face account.
 
 ## Hosted thingys
 
-A thingy that outgrows the browser - too slow, needing packages
-Pyodide lacks, needing a real server - can be hosted under Charlie's
-paid account. The person emails Charlie as usual and says the thingy
-needs hosting. Charlie's assistant then duplicates it into `cabouman/`
-following the server template at
-https://huggingface.co/spaces/cabouman/thingy-template (ordinary
-Gradio, pinned to 5.45.0 so the app behaves exactly as it did on the
-Lite template), verifies that it runs, makes simple fixes if needed,
-and credits the true author in two places: the `thingy_author:` field
-in the Space README metadata, which the repository's front page shows
-as the tile's "by" name, and the `AUTHOR` line at the top of `app.py`,
-which the app displays as its opening line. Always develop and debug
-on the Lite template first.
+A thingy that needs a real server can be hosted under Charlie's paid
+account. That route has its own guide:
+https://cabouman-thingy-repository.static.hf.space/hosted-thingy-guide.md
 
 ## Submitting
 

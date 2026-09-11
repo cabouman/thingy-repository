@@ -138,6 +138,7 @@
   section.submit h2 { margin: 0 0 0.7rem; font-size: 1.5rem; }
   section.submit ol { margin: 0.4rem 0 1rem 1.2rem; padding: 0; line-height: 1.65; }
   section.submit li { margin-bottom: 0.35rem; }
+  section.submit ul { margin: 0.3rem 0 0.2rem 1.1rem; padding: 0; list-style: disc; }
   section.submit code {
     background: #f4efe2;
     border-radius: 6px;
@@ -181,7 +182,12 @@
     <h2>🚀 Submit your thingy</h2>
     <ol>
       <li>Build a thingy &mdash; a small app that does something fun. Write it in <b>Python, JavaScript, or whatever you like</b>.</li>
-      <li>Have your AI assistant read the <a href="https://cabouman-thingy-repository.static.hf.space/claude-instructions.md">builder&rsquo;s guide</a> &mdash; it tells your Claude exactly how to set your thingy up as a free Hugging Face Space.</li>
+      <li>Choose where it runs:
+        <ul>
+          <li><b>On your own free Hugging Face account.</b> Have your AI assistant read the <a href="https://cabouman-thingy-repository.static.hf.space/claude-instructions.md">builder&rsquo;s guide</a>. Most thingys live here.</li>
+          <li><b>On Charlie&rsquo;s account</b>, for thingys that need a real server. Have your assistant read the <a href="https://cabouman-thingy-repository.static.hf.space/hosted-thingy-guide.md">hosting guide</a>, then ask Charlie.</li>
+        </ul>
+      </li>
       <li>Play with your thingy until you like it, then email Charlie the link using the button below.</li>
     </ol>
     <a class="mailbtn" href="mailto:Charles.Bouman@gmail.com?subject=Thingy%20submission%3A%20%5Byour%20thingy%20name%5D&body=Hi%20Charlie%2C%0A%0AHere%20is%20my%20thingy%3A%20https%3A%2F%2Fhuggingface.co%2Fspaces%2FYOUR-USERNAME%2FYOUR-SPACE%0A%0AName%3A%0AWhat%20it%20does%3A%0A%0A">

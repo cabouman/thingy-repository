@@ -42,7 +42,8 @@ jobs:
             index.html:index.html \
             preview.png:preview.png \
             claude-instructions.md:claude-instructions.md \
-            python-thingy-guide.md:python-thingy-guide.md
+            python-thingy-guide.md:python-thingy-guide.md \
+            hosted-thingy-guide.md:hosted-thingy-guide.md
 
           update_space cabouman/thingy-template-lite \
             templates/lite/README.md:README.md \
