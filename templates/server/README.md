@@ -9,7 +9,7 @@ app_file: app.py
 pinned: false
 license: bsd-3-clause
 thingy_author: Your Name Here
-short_description: The hosted-thingy pattern - real Gradio on a server, author credited
+short_description: Real Gradio on a server; the author stays credited
 ---
 
 The pattern for a hosted thingy: ordinary Gradio running on a Hugging

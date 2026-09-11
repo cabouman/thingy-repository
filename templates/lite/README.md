@@ -6,7 +6,7 @@ colorTo: green
 sdk: static
 pinned: false
 license: bsd-3-clause
-short_description: Duplicate me to start a Python thingy - runs free in the browser
+short_description: Duplicate me to start a Python thingy, free in the browser
 ---
 
 The starting point for a Python thingy on a free Hugging Face account.
