@@ -44,6 +44,16 @@
     gap: 1.1rem;
     margin-top: 1.2rem;
   }
+  .tile a.tilelink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .tile .meta a { text-decoration: none; font-size: 1.45rem; line-height: 1; }
   .tile {
     background: var(--card);
     border-radius: 20px;
@@ -89,6 +99,34 @@
   .likes { white-space: nowrap; }
   .rank1 .art { outline: 3px solid #f5b301; outline-offset: 2px; }
 
+  /* The banner is drawn as a speech bubble: rounded box + a tail
+     pointing up at the thingy grid, as if the thingys are asking. */
+  section.talk {
+    position: relative;
+    margin: 3rem auto 0;
+    max-width: 620px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 32px;
+    padding: 1.4rem 2rem;
+    text-align: center;
+    font-size: 1.45rem;
+    box-shadow: 0 3px 0 rgba(45,42,38,0.12);
+    transition: transform 0.15s ease;
+  }
+  section.talk::before {
+    content: "";
+    position: absolute;
+    top: -22px;
+    left: 14%;
+    border: 24px solid transparent;
+    border-bottom-color: var(--accent);
+    border-top: 0;
+    border-left: 0;
+  }
+  section.talk:hover { transform: scale(1.03); }
+  section.talk a { color: #fff; font-weight: 700; }
+
   section.submit {
     margin-top: 3rem;
     background: var(--card);
@@ -133,6 +171,11 @@
 
   <div id="status">Loading thingys&hellip;</div>
   <div class="grid" id="grid"></div>
+
+  <section class="talk">
+    <b>Want to talk thingys?</b>
+    <a href="https://huggingface.co/spaces/cabouman/thingy-repository/discussions" target="_blank" rel="noopener">Join the conversation</a>.
+  </section>
 
   <section class="submit">
     <h2>🚀 Submit your thingy</h2>
@@ -189,8 +232,11 @@ async function load() {
   status.remove();
 
   items.forEach((item, i) => {
+    const tile = document.createElement("div");
+    tile.className = "tile" + (i === 0 && item.likes > 0 ? " rank1" : "");
+
     const a = document.createElement("a");
-    a.className = "tile" + (i === 0 && item.likes > 0 ? " rank1" : "");
+    a.className = "tilelink";
     a.href = "https://huggingface.co/spaces/" + item.id;
     a.target = "_blank";
     a.rel = "noopener";
@@ -207,12 +253,15 @@ async function load() {
     name.className = "name";
     name.textContent = item.title || item.id.split("/")[1];
 
+    a.append(art, name);
+
     const meta = document.createElement("div");
     meta.className = "meta";
-    meta.innerHTML = `<span>by ${item.author}</span><span class="likes">&hearts; ${item.likes}</span>`;
+    meta.innerHTML = `<span>by ${item.author}</span><span class="likes">&hearts; ${item.likes}</span>` +
+      `<a href="https://huggingface.co/spaces/${item.id}/discussions" target="_blank" rel="noopener" title="Discuss this thingy">💬</a>`;
 
-    a.append(art, name, meta);
-    grid.appendChild(a);
+    tile.append(a, meta);
+    grid.appendChild(tile);
   });
 
   if (!items.length) {
