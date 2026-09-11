@@ -16,7 +16,7 @@ jobs:
         run: |
           git clone "https://cabouman:$HF_TOKEN@huggingface.co/spaces/cabouman/thingy-repository" space
           cp .hf/README.md space/README.md
-          cp index.html preview.png claude-instructions.md space/
+          cp index.html preview.png claude-instructions.md python-thingy-guide.md space/
           cd space
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
