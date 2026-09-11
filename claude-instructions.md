@@ -35,6 +35,23 @@ public Space on the person's own free Hugging Face account.
   no escaping exceptions, matplotlib on Agg with PNG plots).
   Startup takes ten to fifteen seconds; there is no GPU.
 
+## Linked thingys (Option 1)
+
+A thingy that already runs somewhere on the web - GitHub Pages, a
+personal site - joins the repository through a frame: a tiny static
+Space whose page embeds the thingy's address in a full-window iframe.
+Duplicate the frame template at
+https://huggingface.co/spaces/cabouman/thingy-template-link and set
+four things: the `THINGY_URL` line in `index.html`, the title (in
+both `index.html` and the README), `icon.png`, and `thingy_author:`.
+If the person has a Hugging Face account, the frame belongs in it, so
+the likes accrue to them; if not, they simply email Charlie the URL,
+icon, and a one-line description, and Charlie's assistant builds the
+frame under Charlie's account with the person credited. Check that
+the thingy's host allows embedding (GitHub Pages does); if it
+refuses, the frame's "open directly" link still works, but tell the
+person their thingy will not display inline.
+
 ## Hosted thingys
 
 A thingy that needs a real server can be hosted under Charlie's paid

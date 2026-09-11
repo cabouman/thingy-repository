@@ -57,3 +57,8 @@ jobs:
             templates/server/requirements.txt:requirements.txt \
             templates/app.py:app.py \
             templates/icon.png:icon.png
+
+          update_space cabouman/thingy-template-link \
+            templates/link/README.md:README.md \
+            templates/link/index.html:index.html \
+            templates/link/icon.png:icon.png
